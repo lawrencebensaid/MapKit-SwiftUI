@@ -22,7 +22,7 @@ struct AppleMap: View {
     @State private var context: MapContext
     @Binding private var directions: MapDirections?
     
-    init(lat latitude: Double, long longitude: Double, directions: Binding<MapDirections?>? = nil) {
+    public init(lat latitude: Double, long longitude: Double, directions: Binding<MapDirections?>? = nil) {
         context = MapContext(latitude: latitude, longitude: longitude)
         if let directions = directions {
             _directions = directions
@@ -312,7 +312,7 @@ class MapContext {
     private var didStart: ((MKDirectionsTransportType, CLLocationCoordinate2D, CLLocationCoordinate2D) -> ())?
     private var didStop: (() -> ())?
     
-    init(latitude: Double, longitude: Double) {
+    public init(latitude: Double, longitude: Double) {
         origin = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
     }
     
@@ -344,7 +344,7 @@ struct MapDirections: Equatable {
     public let source: CLLocationCoordinate2D
     public let destination: CLLocationCoordinate2D
     
-    init(_ transportType: MKDirectionsTransportType, from source: CLLocationCoordinate2D, to destination: CLLocationCoordinate2D) {
+    public init(_ transportType: MKDirectionsTransportType, from source: CLLocationCoordinate2D, to destination: CLLocationCoordinate2D) {
         self.transportType = transportType
         self.source = source
         self.destination = destination
