@@ -5,6 +5,8 @@ MapKit, but with SwiftUI!
 Easily add an AppleMap to your app.
 
 ```swift
+import MapKitSwiftUI
+
 struct ContentView: View {
 
     var body: some View {
