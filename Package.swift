@@ -22,6 +22,7 @@ let package = Package(
         .target(name: "MKSUIAdapter"),
         .target(name: "MKSUIExtensions"),
         .target(name: "MapKitSwiftUI", dependencies: ["MKSUIAdapter", "MKSUIExtensions"]),
-        .testTarget(name: "MapKitSwiftUITests", dependencies: ["MapKitSwiftUI"]),
+        .testTarget(name: "MKSUIAdapterTests", dependencies: ["MKSUIAdapter"]),
+        .testTarget(name: "MKSUIExtensionsTests", dependencies: ["MKSUIExtensions"]),
     ]
 )

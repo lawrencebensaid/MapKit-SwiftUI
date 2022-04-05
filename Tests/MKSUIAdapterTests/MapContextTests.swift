@@ -1,6 +1,6 @@
 //
-//  MKSUIAdapterTests.swift
-//  MapKitSwiftUITests
+//  MapContextTests.swift
+//  MKSUIAdapterTests
 //
 //  Created by Lawrence Bensaid on 4/5/22.
 //
@@ -8,9 +8,9 @@
 import XCTest
 @testable import MKSUIAdapter
 
-final class MKSUIAdapterTests: XCTestCase {
+final class MapContextTests: XCTestCase {
     
-    func testMapContext_startRoute() {
+    func testStartRoute() {
         
         let c = MapContext(latitude: 1, longitude: 2)
         
