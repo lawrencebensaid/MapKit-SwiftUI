@@ -32,7 +32,8 @@ public class MapViewController: UIViewController, MKMapViewDelegate, CLLocationM
         view = UIView()
         view.addSubview(map)
         
-        map.register(MKMarkerAnnotationView.self, forAnnotationViewWithReuseIdentifier: "Annotation")
+        map.register(MKPinAnnotationView.self, forAnnotationViewWithReuseIdentifier: "PinAnnotation")
+        map.register(MKMarkerAnnotationView.self, forAnnotationViewWithReuseIdentifier: "MarkerAnnotation")
         
         map.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         map.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
@@ -85,14 +86,15 @@ public class MapViewController: UIViewController, MKMapViewDelegate, CLLocationM
     }
     
     public func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        guard annotation is MKPointAnnotation else { return nil }
-        guard let annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: "Annotation") as? MKMarkerAnnotationView else { return nil }
-        annotationView.annotation = annotation
-        annotationView.markerTintColor = .systemOrange
-        annotationView.displayPriority = .required
-        annotationView.setGlyph(systemName: "graduationcap.fill")
-        annotationView.titleVisibility = .visible
-        return annotationView
+        guard let annotation = annotation as? CustomAnnotation else { return nil }
+        switch annotation.variant {
+        case .pin:
+            guard let pinView = mapView.dequeueReusableAnnotationView(withIdentifier: "PinAnnotation") as? MKPinAnnotationView else { return nil }
+            return annotation.apply(pinView)
+        case .marker:
+            guard let markerView = mapView.dequeueReusableAnnotationView(withIdentifier: "MarkerAnnotation") as? MKMarkerAnnotationView else { return nil }
+            return annotation.apply(markerView)
+        }
     }
     
 }
@@ -112,6 +114,45 @@ extension MKMarkerAnnotationView {
     
     func setGlyph(systemName: String) {
         glyphImage = UIImage(systemName: systemName)
+    }
+    
+}
+
+public class CustomAnnotation: MKPointAnnotation {
+    
+    public enum Variant { case pin, marker }
+    
+    public let variant: Variant
+    
+    public var markerTintColor: UIColor?
+    public var displayPriority: MKFeatureDisplayPriority?
+    public var titleVisibility: MKFeatureVisibility?
+    public var glyphImage: UIImage?
+    
+    public init(_ variant: Variant) {
+        self.variant = variant
+    }
+    
+    public func apply(_ annotationView: MKMarkerAnnotationView) -> MKAnnotationView {
+        annotationView.annotation = self
+        annotationView.markerTintColor = markerTintColor
+        if let displayPriority = displayPriority {
+            annotationView.displayPriority = displayPriority
+        }
+        if let titleVisibility = titleVisibility {
+            annotationView.titleVisibility = titleVisibility
+        }
+        annotationView.glyphImage = glyphImage
+        return annotationView
+    }
+    
+    public func apply(_ annotationView: MKPinAnnotationView) -> MKAnnotationView {
+        annotationView.annotation = self
+        annotationView.pinTintColor = markerTintColor
+        if let displayPriority = displayPriority {
+            annotationView.displayPriority = displayPriority
+        }
+        return annotationView
     }
     
 }

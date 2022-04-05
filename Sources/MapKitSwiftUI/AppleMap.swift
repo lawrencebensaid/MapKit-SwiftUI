@@ -10,30 +10,48 @@ import SwiftUI
 import Combine
 import MKSUIAdapter
 
-public struct AppleMap: View {
+public struct AppleMap<V: Identifiable, A: AppleMapAnnotation>: View {
     
     @State private var animated = true
     @State private var map = MKMapView()
     @State private var context: MapContext
     @Binding private var directions: MapDirections?
     
-    public init(lat latitude: Double, long longitude: Double, directions: Binding<MapDirections?>? = nil, annotations: [MKAnnotation] = []) {
-        context = MapContext(latitude: latitude, longitude: longitude)
+    private let annotations: [V]
+    
+    private var iterate: ((V) -> A)?
+    
+    public init(lat latitude: Double, long longitude: Double, directions: Binding<MapDirections?>? = nil, annotations: [V], content: ((V) -> A)?) {
+        _context = State(initialValue: MapContext(latitude: latitude, longitude: longitude))
+        iterate = content
+        self.annotations = annotations
         if let directions = directions {
             _directions = directions
         } else {
             _directions = Binding<MapDirections?> { return nil } set: { _ in }
         }
-        map.addAnnotations(annotations)
+    }
+    
+    public init(lat latitude: Double, long longitude: Double, directions: Binding<MapDirections?>? = nil) {
+        self.init(lat: latitude, long: longitude, directions: directions, annotations: [], content: nil)
     }
     
     public var body: some View {
         if #available(iOS 14.0, *) {
             MapViewAdapter(context, map: map, animated: animated)
+                .onAppear(perform: fetchModels)
                 .onChange(of: directions, perform: change)
         } else {
             MapViewAdapter(context, map: map, animated: animated)
+                .onAppear(perform: fetchModels)
                 .onReceive(Just(directions)) { change($0) }
+        }
+    }
+    
+    private func fetchModels() {
+        for item in annotations {
+            guard let model = iterate?(item) else { continue }
+            map.addAnnotation(model.annotation)
         }
     }
     
