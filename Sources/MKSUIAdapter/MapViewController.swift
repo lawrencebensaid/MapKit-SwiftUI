@@ -21,6 +21,7 @@ public class MapViewController: UIViewController, MKMapViewDelegate, CLLocationM
         self.map.translatesAutoresizingMaskIntoConstraints = false
         self.animated = animated
         super.init(nibName: nil, bundle: nil)
+        map.delegate = self
     }
     
     required init?(coder: NSCoder) {
@@ -31,12 +32,12 @@ public class MapViewController: UIViewController, MKMapViewDelegate, CLLocationM
         view = UIView()
         view.addSubview(map)
         
+        map.register(MKMarkerAnnotationView.self, forAnnotationViewWithReuseIdentifier: "Annotation")
+        
         map.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         map.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         map.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         map.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        
-        map.delegate = self
         
         context.onStopRoute {
             if let overlay = self.routeOverlay {
@@ -83,6 +84,17 @@ public class MapViewController: UIViewController, MKMapViewDelegate, CLLocationM
         return renderer
     }
     
+    public func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        guard annotation is MKPointAnnotation else { return nil }
+        guard let annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: "Annotation") as? MKMarkerAnnotationView else { return nil }
+        annotationView.annotation = annotation
+        annotationView.markerTintColor = .systemOrange
+        annotationView.displayPriority = .required
+        annotationView.setGlyph(systemName: "graduationcap.fill")
+        annotationView.titleVisibility = .visible
+        return annotationView
+    }
+    
 }
 
 #if os(macOS)
@@ -91,3 +103,15 @@ typealias UIViewController = NSViewController
 typealias UIViewControllerRepresentable = NSViewControllerRepresentable
 typealias UIViewControllerRepresentableContext = NSViewControllerRepresentableContext
 #endif
+
+extension MKMarkerAnnotationView {
+    
+    func setGlyph(_ image: UIImage) {
+        glyphImage = image
+    }
+    
+    func setGlyph(systemName: String) {
+        glyphImage = UIImage(systemName: systemName)
+    }
+    
+}

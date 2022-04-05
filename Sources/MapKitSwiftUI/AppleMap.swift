@@ -17,13 +17,14 @@ public struct AppleMap: View {
     @State private var context: MapContext
     @Binding private var directions: MapDirections?
     
-    public init(lat latitude: Double, long longitude: Double, directions: Binding<MapDirections?>? = nil) {
+    public init(lat latitude: Double, long longitude: Double, directions: Binding<MapDirections?>? = nil, annotations: [MKAnnotation] = []) {
         context = MapContext(latitude: latitude, longitude: longitude)
         if let directions = directions {
             _directions = directions
         } else {
             _directions = Binding<MapDirections?> { return nil } set: { _ in }
         }
+        map.addAnnotations(annotations)
     }
     
     public var body: some View {
