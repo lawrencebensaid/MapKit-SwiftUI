@@ -5,7 +5,7 @@
 //  Created by Lawrence Bensaid on 4/5/22.
 //
 
-import UIKit
+import MapKit
 import MKSUIAdapter
 
 public protocol AppleMapAnnotation {
@@ -25,6 +25,8 @@ public protocol AppleMapAnnotation {
 #if os(macOS)
     func color(_ color: NSColor) -> ConcreteType
 #endif
+    
+    func displayPriority(_ displayPriority: MKFeatureDisplayPriority) -> ConcreteType
     
     func onTap(perform action: @escaping (() -> ())) -> ConcreteType
     

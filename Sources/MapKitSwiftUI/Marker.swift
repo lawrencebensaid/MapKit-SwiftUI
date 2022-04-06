@@ -30,7 +30,7 @@ public class Marker: AppleMapAnnotation {
     }
     
     public func color(_ color: UIColor) -> Marker {
-        annotation.markerTintColor = color
+        annotation.tintColor = color
         return self
     }
     
@@ -41,6 +41,11 @@ public class Marker: AppleMapAnnotation {
     
     public func titleVisibility(_ titleVisibility: MKFeatureVisibility) -> Marker {
         annotation.titleVisibility = titleVisibility
+        return self
+    }
+    
+    public func subtitleVisibility(_ subtitleVisibility: MKFeatureVisibility) -> Marker {
+        annotation.subtitleVisibility = subtitleVisibility
         return self
     }
     

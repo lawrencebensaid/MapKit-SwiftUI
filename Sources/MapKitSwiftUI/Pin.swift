@@ -22,11 +22,16 @@ public class Pin: AppleMapAnnotation {
     }
     
     public func color(_ color: UIColor) -> Pin {
-        annotation.markerTintColor = color
+        annotation.tintColor = color
         return self
     }
     
-    public func onTap(perform action: @escaping (() -> ())) -> Marker {
+    public func displayPriority(_ displayPriority: MKFeatureDisplayPriority) -> Pin {
+        annotation.displayPriority = displayPriority
+        return self
+    }
+    
+    public func onTap(perform action: @escaping (() -> ())) -> Pin {
         annotation.action = action
         return self
     }
