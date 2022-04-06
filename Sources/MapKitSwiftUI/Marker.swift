@@ -49,4 +49,9 @@ public class Marker: AppleMapAnnotation {
         return self
     }
     
+    public func onTap(perform action: @escaping (() -> ())) -> Marker {
+        annotation.action = action
+        return self
+    }
+    
 }

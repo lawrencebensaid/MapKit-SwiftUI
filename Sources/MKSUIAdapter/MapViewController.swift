@@ -97,6 +97,11 @@ public class MapViewController: UIViewController, MKMapViewDelegate, CLLocationM
         }
     }
     
+    public func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+        guard let annotation = view.annotation as? CustomAnnotation else { return }
+        annotation.action?()
+    }
+    
 }
 
 #if os(macOS)
@@ -123,6 +128,7 @@ public class CustomAnnotation: MKPointAnnotation {
     public enum Variant { case pin, marker }
     
     public let variant: Variant
+    public var action: (() -> ())?
     
     public var markerTintColor: UIColor?
     public var displayPriority: MKFeatureDisplayPriority?

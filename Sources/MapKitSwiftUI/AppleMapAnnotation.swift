@@ -26,4 +26,6 @@ public protocol AppleMapAnnotation {
     func color(_ color: NSColor) -> ConcreteType
 #endif
     
+    func onTap(perform action: @escaping (() -> ())) -> ConcreteType
+    
 }
