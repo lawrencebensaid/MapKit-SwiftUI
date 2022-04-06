@@ -97,6 +97,11 @@ public class MapViewController: UIViewController, MKMapViewDelegate, CLLocationM
         }
     }
     
+    public func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+        guard let annotation = view.annotation as? CustomAnnotation else { return }
+        annotation.action?()
+    }
+    
 }
 
 #if os(macOS)
@@ -114,45 +119,6 @@ extension MKMarkerAnnotationView {
     
     func setGlyph(systemName: String) {
         glyphImage = UIImage(systemName: systemName)
-    }
-    
-}
-
-public class CustomAnnotation: MKPointAnnotation {
-    
-    public enum Variant { case pin, marker }
-    
-    public let variant: Variant
-    
-    public var markerTintColor: UIColor?
-    public var displayPriority: MKFeatureDisplayPriority?
-    public var titleVisibility: MKFeatureVisibility?
-    public var glyphImage: UIImage?
-    
-    public init(_ variant: Variant) {
-        self.variant = variant
-    }
-    
-    public func apply(_ annotationView: MKMarkerAnnotationView) -> MKAnnotationView {
-        annotationView.annotation = self
-        annotationView.markerTintColor = markerTintColor
-        if let displayPriority = displayPriority {
-            annotationView.displayPriority = displayPriority
-        }
-        if let titleVisibility = titleVisibility {
-            annotationView.titleVisibility = titleVisibility
-        }
-        annotationView.glyphImage = glyphImage
-        return annotationView
-    }
-    
-    public func apply(_ annotationView: MKPinAnnotationView) -> MKAnnotationView {
-        annotationView.annotation = self
-        annotationView.pinTintColor = markerTintColor
-        if let displayPriority = displayPriority {
-            annotationView.displayPriority = displayPriority
-        }
-        return annotationView
     }
     
 }

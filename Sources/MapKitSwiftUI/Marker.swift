@@ -30,7 +30,7 @@ public class Marker: AppleMapAnnotation {
     }
     
     public func color(_ color: UIColor) -> Marker {
-        annotation.markerTintColor = color
+        annotation.tintColor = color
         return self
     }
     
@@ -44,8 +44,18 @@ public class Marker: AppleMapAnnotation {
         return self
     }
     
+    public func subtitleVisibility(_ subtitleVisibility: MKFeatureVisibility) -> Marker {
+        annotation.subtitleVisibility = subtitleVisibility
+        return self
+    }
+    
     public func glyphImage(systemName: String) -> Marker {
         annotation.glyphImage = UIImage(systemName: systemName)
+        return self
+    }
+    
+    public func onTap(perform action: @escaping (() -> ())) -> Marker {
+        annotation.action = action
         return self
     }
     
