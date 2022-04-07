@@ -8,6 +8,7 @@
 import MapKit
 import MKSUIAdapter
 
+@available(iOS 13, macOS 11, *)
 public class Marker: AppleMapAnnotation {
     
     public let annotation = CustomAnnotation(.marker)
@@ -29,16 +30,26 @@ public class Marker: AppleMapAnnotation {
         return self
     }
     
+#if os(iOS)
     public func color(_ color: UIColor) -> Marker {
         annotation.tintColor = color
         return self
     }
+#endif
+    
+#if os(macOS)
+    public func color(_ color: NSColor) -> Marker {
+        annotation.tintColor = color
+        return self
+    }
+#endif
     
     public func displayPriority(_ displayPriority: MKFeatureDisplayPriority) -> Marker {
         annotation.displayPriority = displayPriority
         return self
     }
     
+#if os(iOS)
     public func titleVisibility(_ titleVisibility: MKFeatureVisibility) -> Marker {
         annotation.titleVisibility = titleVisibility
         return self
@@ -53,6 +64,14 @@ public class Marker: AppleMapAnnotation {
         annotation.glyphImage = UIImage(systemName: systemName)
         return self
     }
+#endif
+    
+#if os(macOS)
+    public func glyphImage(systemName: String) -> Marker {
+        annotation.glyphImage = NSImage(systemSymbolName: systemName, accessibilityDescription: systemName)
+        return self
+    }
+#endif
     
     public func onTap(perform action: @escaping (() -> ())) -> Marker {
         annotation.action = action

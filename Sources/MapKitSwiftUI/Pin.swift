@@ -21,10 +21,19 @@ public class Pin: AppleMapAnnotation {
         return self
     }
     
+#if os(iOS)
     public func color(_ color: UIColor) -> Pin {
         annotation.tintColor = color
         return self
     }
+#endif
+    
+#if os(macOS)
+    public func color(_ color: NSColor) -> Pin {
+        annotation.tintColor = color
+        return self
+    }
+#endif
     
     public func displayPriority(_ displayPriority: MKFeatureDisplayPriority) -> Pin {
         annotation.displayPriority = displayPriority

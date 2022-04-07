@@ -37,7 +37,7 @@ public struct AppleMap<V: Identifiable, A: AppleMapAnnotation>: View {
     }
     
     public var body: some View {
-        if #available(iOS 14.0, *) {
+        if #available(iOS 14.0, macOS 11, *) {
             MapViewAdapter(context, map: map, animated: animated)
                 .onAppear(perform: fetchModels)
                 .onChange(of: directions, perform: change)
@@ -112,6 +112,7 @@ public struct AppleMap<V: Identifiable, A: AppleMapAnnotation>: View {
         return self
     }
     
+#if os(iOS)
     /// Sets the color (and width) of the directions overlay stroke while a navigation session is active
     public func directionOverlay(color: UIColor, width: Float? = nil) -> AppleMap {
         context.overlayColor = color.cgColor
@@ -120,6 +121,17 @@ public struct AppleMap<V: Identifiable, A: AppleMapAnnotation>: View {
         }
         return self
     }
+#endif
+#if os(macOS)
+    /// Sets the color (and width) of the directions overlay stroke while a navigation session is active
+    public func directionOverlay(color: NSColor, width: Float? = nil) -> AppleMap {
+        context.overlayColor = color.cgColor
+        if let width = width {
+            context.overlayWidth = width
+        }
+        return self
+    }
+#endif
     
     /// Sets the width of the directions overlay stroke while a navigation session is active
     public func directionOverlay(width: Float) -> AppleMap {
@@ -133,6 +145,7 @@ public struct AppleMap<V: Identifiable, A: AppleMapAnnotation>: View {
         return self
     }
     
+    @available(iOS 13, macOS 11, *)
     public func userTracking(_ mode: MKUserTrackingMode) -> AppleMap {
         map.setUserTrackingMode(mode, animated: animated)
         return self

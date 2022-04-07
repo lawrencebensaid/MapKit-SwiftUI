@@ -10,8 +10,14 @@ import MapKit
 public class MapContext {
     
     public let origin: CLLocationCoordinate2D
-    
+
+#if os(iOS)
     public var overlayColor: CGColor = UIColor.systemBlue.cgColor
+#endif
+#if os(macOS)
+    public var overlayColor: CGColor = NSColor.systemBlue.cgColor
+#endif
+    
     public var overlayWidth: Float = 8
     
     private var didStart: ((MKDirectionsTransportType, CLLocationCoordinate2D, CLLocationCoordinate2D) -> ())?
