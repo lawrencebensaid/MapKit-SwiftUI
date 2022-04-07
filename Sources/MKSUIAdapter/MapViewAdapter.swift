@@ -7,6 +7,7 @@
 
 import MapKit
 import SwiftUI
+import MKSUIExtensions
 
 public struct MapViewAdapter: UIViewControllerRepresentable {
     

@@ -6,6 +6,8 @@
 //
 
 import MapKit
+import SwiftUI
+import MKSUIExtensions
 
 public class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     
@@ -33,7 +35,9 @@ public class MapViewController: UIViewController, MKMapViewDelegate, CLLocationM
         view.addSubview(map)
         
         map.register(MKPinAnnotationView.self, forAnnotationViewWithReuseIdentifier: "PinAnnotation")
-        map.register(MKMarkerAnnotationView.self, forAnnotationViewWithReuseIdentifier: "MarkerAnnotation")
+        if #available(iOS 13.0, macOS 11.0, *) {
+            map.register(MKMarkerAnnotationView.self, forAnnotationViewWithReuseIdentifier: "MarkerAnnotation")
+        }
         
         map.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         map.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
@@ -80,7 +84,12 @@ public class MapViewController: UIViewController, MKMapViewDelegate, CLLocationM
     
     public func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
         let renderer = MKPolylineRenderer(overlay: overlay)
+#if os(iOS)
         renderer.strokeColor = UIColor(cgColor: context.overlayColor)
+#endif
+#if os(macOS)
+        renderer.strokeColor = NSColor(cgColor: context.overlayColor)
+#endif
         renderer.lineWidth = CGFloat(context.overlayWidth)
         return renderer
     }
@@ -92,33 +101,17 @@ public class MapViewController: UIViewController, MKMapViewDelegate, CLLocationM
             guard let pinView = mapView.dequeueReusableAnnotationView(withIdentifier: "PinAnnotation") as? MKPinAnnotationView else { return nil }
             return annotation.apply(pinView)
         case .marker:
-            guard let markerView = mapView.dequeueReusableAnnotationView(withIdentifier: "MarkerAnnotation") as? MKMarkerAnnotationView else { return nil }
-            return annotation.apply(markerView)
+            if #available(iOS 13, macOS 11, *) {
+                guard let markerView = mapView.dequeueReusableAnnotationView(withIdentifier: "MarkerAnnotation") as? MKMarkerAnnotationView else { return nil }
+                return annotation.apply(markerView)
+            }
         }
+        return nil
     }
     
     public func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
         guard let annotation = view.annotation as? CustomAnnotation else { return }
         annotation.action?()
-    }
-    
-}
-
-#if os(macOS)
-typealias UIView = NSView
-typealias UIViewController = NSViewController
-typealias UIViewControllerRepresentable = NSViewControllerRepresentable
-typealias UIViewControllerRepresentableContext = NSViewControllerRepresentableContext
-#endif
-
-extension MKMarkerAnnotationView {
-    
-    func setGlyph(_ image: UIImage) {
-        glyphImage = image
-    }
-    
-    func setGlyph(systemName: String) {
-        glyphImage = UIImage(systemName: systemName)
     }
     
 }
