@@ -7,6 +7,7 @@
 
 import MapKit
 import MKSUIAdapter
+import MKSUIExtensions
 
 public class Pin: AppleMapAnnotation {
     

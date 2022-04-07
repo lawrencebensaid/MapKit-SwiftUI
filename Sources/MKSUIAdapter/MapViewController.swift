@@ -7,6 +7,7 @@
 
 import MapKit
 import SwiftUI
+import MKSUIExtensions
 
 public class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     
@@ -114,38 +115,3 @@ public class MapViewController: UIViewController, MKMapViewDelegate, CLLocationM
     }
     
 }
-
-@available(iOS 13, macOS 11, *)
-extension MKMarkerAnnotationView {
-    
-#if os(iOS)
-    func setGlyph(_ image: UIImage) {
-        glyphImage = image
-    }
-    
-    func setGlyph(systemName: String) {
-        glyphImage = UIImage(systemName: systemName)
-    }
-#endif
-    
-#if os(macOS)
-    func setGlyph(_ image: NSImage) {
-        glyphImage = image
-    }
-    
-    func setGlyph(systemName: String) {
-        glyphImage = NSImage(systemSymbolName: systemName, accessibilityDescription: systemName)
-    }
-#endif
-    
-}
-
-#if os(macOS)
-public typealias UIColor = NSColor
-public typealias UIImage = NSImage
-
-public typealias UIView = NSView
-public typealias UIViewController = NSViewController
-public typealias UIViewControllerRepresentable = NSViewControllerRepresentable
-public typealias UIViewControllerRepresentableContext = NSViewControllerRepresentableContext
-#endif

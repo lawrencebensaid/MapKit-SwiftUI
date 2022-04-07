@@ -7,6 +7,7 @@
 
 import MapKit
 import MKSUIAdapter
+import MKSUIExtensions
 
 @available(iOS 13, macOS 11, *)
 public class Marker: AppleMapAnnotation {

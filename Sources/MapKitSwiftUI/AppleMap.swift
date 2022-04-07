@@ -9,6 +9,7 @@ import MapKit
 import SwiftUI
 import Combine
 import MKSUIAdapter
+import MKSUIExtensions
 
 public struct AppleMap<V: Identifiable, A: AppleMapAnnotation>: View {
     

@@ -6,6 +6,7 @@
 //
 
 import MapKit
+import MKSUIExtensions
 
 public class CustomAnnotation: MKPointAnnotation {
     
